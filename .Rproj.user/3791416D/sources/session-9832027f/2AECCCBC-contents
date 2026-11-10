@@ -1,0 +1,82 @@
+---
+title: "Dashboard"
+format: dashboard
+---
+
+```{r}
+#| label: dashboard-setup
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(plotly)
+library(leaflet)
+
+penguins <- datasets::penguins |>
+  drop_na(sex)
+```
+
+## Row {height=20%}
+
+### Number of islands
+
+```{r}
+#| content: valuebox
+#| title: "Number of islands"
+#| icon: "geo-alt"
+#| color: "#d1f0ff"
+
+dplyr::n_distinct(penguins$island)
+```
+
+### Favorite food
+
+```{r}
+#| content: valuebox
+#| title: "Favorite food"
+#| icon: "fish"
+#| color: "#ffe5db"
+
+"Fish"
+```
+
+## Row {height=80%}
+
+### Palmer Station, Antarctica
+
+```{r}
+#| title: "Palmer Station, Antarctica"
+
+palmer_coords <- list(lng = -64.053, lat = -64.774)
+
+leaflet() |>
+  addTiles() |>
+  setView(
+    lng = palmer_coords$lng,
+    lat = palmer_coords$lat,
+    zoom = 16
+  ) |>
+  addMarkers(
+    lng = palmer_coords$lng,
+    lat = palmer_coords$lat,
+    popup = "Home of the famous penguins"
+  )
+```
+
+### Bill length and bill depth
+
+```{r}
+#| title: "Bill length and bill depth"
+
+p <- ggplot(penguins, aes(x = bill_dep, y = bill_len, color = species)) +
+  geom_point() +
+  scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
+  labs(
+    x = "Bill depth (mm)",
+    y = "Bill length (mm)",
+    color = "Species"
+  ) +
+  theme_light()
+
+ggplotly(p)
+```

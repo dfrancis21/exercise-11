@@ -1,0 +1,86 @@
+[
+  {
+    "objectID": "interactive-plots.html",
+    "href": "interactive-plots.html",
+    "title": "Tasks 1 & 2: Interactive plots",
+    "section": "",
+    "text": "I learned that a regular ggplot() graph can be made interactive with ggplotly(), allowing viewers to explore individual observations by hovering over points.\nI learned that the information shown in a tooltip can be customized by creating a text label that combines multiple variables from the dataset.\nI found it interesting that a Quarto dashboard can bring different types of information together, including an interactive map, value boxes, and a data visualization, in one webpage.\n\n\n\n\n\nI am still learning how to control the exact appearance and placement of information in interactive plot tooltips.\nThe dashboard layout options and the way rows and columns determine the size of each element are still a little unclear.\nI would like more practice understanding the publishing process and how changes to the project files update the live website."
+  },
+  {
+    "objectID": "interactive-plots.html#task-1-session-check-in",
+    "href": "interactive-plots.html#task-1-session-check-in",
+    "title": "Tasks 1 & 2: Interactive plots",
+    "section": "",
+    "text": "I learned that a regular ggplot() graph can be made interactive with ggplotly(), allowing viewers to explore individual observations by hovering over points.\nI learned that the information shown in a tooltip can be customized by creating a text label that combines multiple variables from the dataset.\nI found it interesting that a Quarto dashboard can bring different types of information together, including an interactive map, value boxes, and a data visualization, in one webpage.\n\n\n\n\n\nI am still learning how to control the exact appearance and placement of information in interactive plot tooltips.\nThe dashboard layout options and the way rows and columns determine the size of each element are still a little unclear.\nI would like more practice understanding the publishing process and how changes to the project files update the live website."
+  },
+  {
+    "objectID": "interactive-plots.html#task-2-interactive-plot",
+    "href": "interactive-plots.html#task-2-interactive-plot",
+    "title": "Tasks 1 & 2: Interactive plots",
+    "section": "Task 2: Interactive plot",
+    "text": "Task 2: Interactive plot\nThe plot below compares penguin bill depth and bill length. Color and point shape distinguish the three species. Hover over a point to see the species, sex, island, bill depth, and bill length.\n\nlibrary(tidyverse)\nlibrary(plotly)\nlibrary(glue)\n\npenguins &lt;- datasets::penguins |&gt;\n  drop_na(sex)\n\n\nRecreate plot\n\npenguins_labeled &lt;- penguins |&gt;\n  mutate(\n    label = glue(\n      \"{species} ({sex} on {island} Island)&lt;br&gt;\",\n      \"Bill depth: {bill_dep} mm&lt;br&gt;\",\n      \"Bill length: {bill_len} mm\"\n    )\n  )\n\np &lt;- ggplot(\n  penguins_labeled,\n  aes(\n    x = bill_dep,\n    y = bill_len,\n    color = species,\n    shape = species,\n    text = label\n  )\n) +\n  geom_point(size = 3) +\n  scale_color_manual(values = c(\"darkorange\", \"purple\", \"cyan4\")) +\n  labs(\n    x = \"Bill depth (mm)\",\n    y = \"Bill length (mm)\",\n    color = \"Species\",\n    shape = \"Species\"\n  ) +\n  theme_light()\n\n# Convert the static ggplot into an interactive plotly graphic.\nggplotly(p, tooltip = \"text\")"
+  },
+  {
+    "objectID": "instructions.html",
+    "href": "instructions.html",
+    "title": "Instructions and submission",
+    "section": "",
+    "text": "This project is a Quarto website. Complete the check-in and interactive plot on the Tasks 1 and 2 page, build the dashboard on the Task 3 page, and explore the optional extension page.\nFor the official assignment directions, see Exercise 11 instructions."
+  },
+  {
+    "objectID": "instructions.html#preview-the-website",
+    "href": "instructions.html#preview-the-website",
+    "title": "Instructions and submission",
+    "section": "Preview the website",
+    "text": "Preview the website\nIn RStudio, use Build → Render Website to render the full website. You can also run quarto preview in the Terminal."
+  },
+  {
+    "objectID": "instructions.html#publish-the-website",
+    "href": "instructions.html#publish-the-website",
+    "title": "Instructions and submission",
+    "section": "Publish the website",
+    "text": "Publish the website\n\nCreate a free account at Quarto Pub and sign in.\nIn the RStudio Terminal, run quarto publish.\nChoose Quarto Pub and follow the prompts.\nCopy the published website URL shown in the Terminal.\nPaste that URL into the Exercise 11 submission form in iCollege.\n\nDo not submit a PDF or Word document. The assignment requires the URL of the published website because the interactive graphics require HTML."
+  },
+  {
+    "objectID": "explore.html",
+    "href": "explore.html",
+    "title": "Extra exploration",
+    "section": "",
+    "text": "This optional page adds another interactive view of the Palmer Penguins dataset. The scatterplot compares flipper length with body mass. Hover over a point to see the species, island, and measurements."
+  },
+  {
+    "objectID": "explore.html#exploring-penguin-body-measurements",
+    "href": "explore.html#exploring-penguin-body-measurements",
+    "title": "Extra exploration",
+    "section": "",
+    "text": "This optional page adds another interactive view of the Palmer Penguins dataset. The scatterplot compares flipper length with body mass. Hover over a point to see the species, island, and measurements."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Exercise 11: Interactivity",
+    "section": "",
+    "text": "This website explores the Palmer Penguins dataset through interactive graphics and a dashboard."
+  },
+  {
+    "objectID": "index.html#meet-the-palmer-penguins",
+    "href": "index.html#meet-the-palmer-penguins",
+    "title": "Exercise 11: Interactivity",
+    "section": "",
+    "text": "This website explores the Palmer Penguins dataset through interactive graphics and a dashboard."
+  },
+  {
+    "objectID": "index.html#data-description",
+    "href": "index.html#data-description",
+    "title": "Exercise 11: Interactivity",
+    "section": "Data description",
+    "text": "Data description\nThe data for this exercise comes from Dr. Kristen Gorman and her team of researchers at Palmer Station, Antarctica. It contains measurements for 344 penguins across three Antarctic islands. The data was originally published in 2020 as the {palmerpenguins} package by Allison Horst and Alison Hill. Starting with R version 4.5, a version of the dataset is included among R’s built-in datasets as datasets::penguins.\nThe dataset contains eight columns:\n\n\n\nVariable\nDefinition\n\n\n\n\nspecies\nPenguin species\n\n\nisland\nIsland where the penguin was observed\n\n\nbill_len\nBill length (mm)\n\n\nbill_dep\nBill depth (mm)\n\n\nflipper_len\nFlipper length (mm)\n\n\nbody_mass\nBody mass (g)\n\n\nsex\nSex\n\n\nyear\nStudy year\n\n\n\n\n\n\n\n\n\nImportantColumn names before R 4.5\n\n\n\nThis exercise assumes R version 4.5 or newer. If you are using an older version of R, install the {palmerpenguins} package and replace datasets::penguins with palmerpenguins::penguins. In the older package, the columns are named bill_length_mm, bill_depth_mm, flipper_length_mm, and body_mass_g instead of bill_len, bill_dep, flipper_len, and body_mass."
+  },
+  {
+    "objectID": "index.html#bill-length-and-bill-depth",
+    "href": "index.html#bill-length-and-bill-depth",
+    "title": "Exercise 11: Interactivity",
+    "section": "Bill length and bill depth",
+    "text": "Bill length and bill depth\nThe illustration below explains the two bill measurements used in the interactive scatterplot. In the raw data, these measurements are called culmen length and culmen depth. The culmen is the dorsal ridge along the top of the bill.\n\n\n\nBill length and bill depth measurements"
+  }
+]

@@ -1,0 +1,172 @@
+---
+title: "Amounts and proportions"
+subtitle: "Exercise 4 --- PMAP 8551/4551, Fall 2026"
+author: "D'Andra Francis"
+date: "October 4, 2026"
+date-format: "long"
+format:
+  html:
+    toc: true
+  typst:
+    toc: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+---
+
+# Task 1: Session check-in
+
+Three interesting or exciting things:
+
+1. I found it interesting to learn how to use `group_by()` and `summarize()` to organize the animal shelter data. It helped me understand how a large dataset can be broken down into smaller groups and summarized.
+2. I liked creating the bar plot because it made it easier to see the differences between the numbers of birds, cats, dogs, other animals, and wild animals in the dataset.
+3. I also found the lollipop plot interesting because it showed the different animal outcomes as proportions. Sorting the outcomes made it easier for me to compare which outcomes were most common.
+
+Three muddy or unclear things:
+
+1. I am still getting used to understanding exactly how `group_by()` affects the calculations that come afterward.
+2. I sometimes get confused about when I need to use `group_by()` again, especially when calculating proportions within different groups.
+3. I am still learning how to customize ggplot2 graphs. I understand how to create the basic graphs, but I would like more practice with colors, labels, themes, and other formatting options.
+
+# Task 2: Long Beach Animal Shelter
+
+```{r}
+library(tidyverse)
+
+animals_raw <- read_csv("data/animals.csv")
+
+animals <- animals_raw |>
+  filter(animal_type %in% c("bird", "cat", "dog", "wild", "other")) |>
+  filter(intake_type %in% c("owner surrender", "stray", "wildlife")) |>
+  filter(
+    outcome_type %in% c(
+      "outcome_type", "rescue", "adoption", "euthanasia", "transfer",
+      "return to owner", "shelter, neuter, return", "died",
+      "community cat", "return to wild habitat"
+    )
+  ) |>
+  mutate(
+    intake_year = lubridate::year(intake_date),
+    intake_month = lubridate::month(intake_date, label = TRUE, abbr = FALSE)
+  ) |>
+  mutate(across(c(animal_type, intake_type, outcome_type), \(x) str_to_title(x)))
+```
+
+## Animal type
+
+### Recreation data 1
+
+```{r}
+animal_counts <- animals |>
+  group_by(animal_type) |>
+  summarize(total = n())
+animal_counts
+```
+
+The results should be:
+
+| Animal type | Total |
+|:--|--:|
+| Bird | 1,952 |
+| Cat | 13,367 |
+| Dog | 8,448 |
+| Other | 1,280 |
+| Wild | 1,366 |
+
+### Recreation plot 1
+
+```{r}
+ggplot(animal_counts, aes(x = animal_type, y = total, fill = animal_type)) +
+  geom_col() +
+  theme(legend.position = "none")
+```
+
+## Outcomes
+
+### Recreation data 2
+
+```{r}
+outcome_props <- animals |>
+  group_by(outcome_type) |>
+  summarize(total = n()) |>
+  mutate(proportion = total / sum(total))
+outcome_props
+```
+
+The results should be approximately:
+
+| Outcome | Total | Proportion |
+|:--|--:|--:|
+| Adoption | 5,651 | 0.214 |
+| Community Cat | 382 | 0.0145 |
+| Died | 715 | 0.0271 |
+| Euthanasia | 5,250 | 0.199 |
+| Rescue | 6,022 | 0.228 |
+| Return To Owner | 2,579 | 0.0976 |
+| Return To Wild Habitat | 251 | 0.00950 |
+| Shelter, Neuter, Return | 911 | 0.0345 |
+| Transfer | 4,652 | 0.176 |
+
+What proportion are adopted or rescued?
+
+About 21.4% of the animals were adopted and about 22.8% were rescued. Together, adoption and rescue account for about 44.2% of the animals in this filtered dataset.
+
+### Recreation plot 2
+
+```{r}
+ggplot(outcome_props, aes(x = proportion, y = outcome_type)) +
+  geom_pointrange(aes(xmin = 0, xmax = proportion))
+```
+
+### Recreation plot 3
+
+```{r}
+outcome_props <- outcome_props |>
+  mutate(outcome_type = fct_reorder(outcome_type, proportion))
+
+ggplot(outcome_props, aes(x = proportion, y = outcome_type)) +
+  geom_pointrange(aes(xmin = 0, xmax = proportion))
+```
+
+## Intake type over time
+
+### Month intake proportions
+
+```{r}
+month_intake_props <- animals |>
+  group_by(intake_type, intake_month) |>
+  summarize(total = n()) |>
+  group_by(intake_type) |>
+  mutate(proportion = total / sum(total))
+month_intake_props
+```
+
+### Recreation plot 4 Heatmap
+
+```{r}
+ggplot(
+  month_intake_props,
+  aes(
+    x = intake_type,
+    y = fct_rev(intake_month),
+    fill = proportion
+  )
+) +
+  geom_tile()
+```
+
+# Task 3: Extension
+
+```{r}
+ggplot(animal_counts, aes(x = animal_type, y = total, fill = animal_type)) +
+  geom_col() +
+  geom_text(aes(label = total), vjust = -0.3) +
+  labs(
+    title = "Animals Seen by Long Beach Animal Shelter",
+    x = "Animal Type",
+    y = "Number of Animals"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```

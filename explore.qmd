@@ -1,0 +1,57 @@
+---
+title: "Extra exploration"
+toc: true
+---
+
+## Exploring penguin body measurements
+
+This optional page adds another interactive view of the Palmer Penguins dataset. The scatterplot compares flipper length with body mass. Hover over a point to see the species, island, and measurements.
+
+```{r}
+#| label: explore-setup
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(plotly)
+library(glue)
+
+penguins <- datasets::penguins |>
+  drop_na(sex)
+```
+
+```{r}
+#| label: flipper-mass-plot
+#| warning: false
+
+penguins_explore <- penguins |>
+  mutate(
+    label = glue(
+      "{species} ({sex}) on {island} Island<br>",
+      "Flipper length: {flipper_len} mm<br>",
+      "Body mass: {body_mass} g"
+    )
+  )
+
+p <- ggplot(
+  penguins_explore,
+  aes(
+    x = flipper_len,
+    y = body_mass,
+    color = species,
+    shape = species,
+    text = label
+  )
+) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
+  labs(
+    x = "Flipper length (mm)",
+    y = "Body mass (g)",
+    color = "Species",
+    shape = "Species"
+  ) +
+  theme_light()
+
+ggplotly(p, tooltip = "text")
+```
