@@ -13,18 +13,18 @@ The data for this exercise comes from Dr. Kristen Gorman and her team of researc
 
 The dataset contains eight columns:
 
-| Variable | Definition |
-|:--|:--|
-| `species` | Penguin species |
-| `island` | Island where the penguin was observed |
-| `bill_len` | Bill length (mm) |
-| `bill_dep` | Bill depth (mm) |
-| `flipper_len` | Flipper length (mm) |
-| `body_mass` | Body mass (g) |
-| `sex` | Sex |
-| `year` | Study year |
+| Variable      | Definition                            |
+|:--------------|:--------------------------------------|
+| `species`     | Penguin species                       |
+| `island`      | Island where the penguin was observed |
+| `bill_len`    | Bill length (mm)                      |
+| `bill_dep`    | Bill depth (mm)                       |
+| `flipper_len` | Flipper length (mm)                   |
+| `body_mass`   | Body mass (g)                         |
+| `sex`         | Sex                                   |
+| `year`        | Study year                            |
 
-::: {.callout-important}
+::: callout-important
 ### Column names before R 4.5
 
 This exercise assumes R version 4.5 or newer. If you are using an older version of R, install the `{palmerpenguins}` package and replace `datasets::penguins` with `palmerpenguins::penguins`. In the older package, the columns are named `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g` instead of `bill_len`, `bill_dep`, `flipper_len`, and `body_mass`.
@@ -34,4 +34,4 @@ This exercise assumes R version 4.5 or newer. If you are using an older version 
 
 The illustration below explains the two bill measurements used in the interactive scatterplot. In the raw data, these measurements are called culmen length and culmen depth. The culmen is the dorsal ridge along the top of the bill.
 
-![Bill length and bill depth measurements](img/culmen_depth.png){fig-align="center" width="85%"}
+![Bill length and bill depth measurements](culmen_depth.png){fig-align="center"}

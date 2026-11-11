@@ -28,10 +28,15 @@ The plot below compares penguin bill depth and bill length. Color and point shap
 
 library(tidyverse)
 library(plotly)
+library(palmerpenguins)
 library(glue)
 
-penguins <- datasets::penguins |>
-  drop_na(sex)
+penguins <- palmerpenguins::penguins |>
+  drop_na(sex) |>
+  rename(
+    bill_dep = bill_depth_mm,
+    bill_len = bill_length_mm
+  )
 ```
 
 ### Recreate plot
